@@ -1,0 +1,12 @@
+.button {
+    -fx-color: black;
+    -fx-padding: 4px;
+    -fx-background-color: #3498db;
+    -fx-background-radius: 15px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.5s;
+}
+
+.button:hover {
+    -fx-background-color: #e74c3c;
+}
