@@ -8,9 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
@@ -28,13 +26,13 @@ import java.util.TimerTask;
 public class MediaPlayer implements Initializable {
 
     @FXML
-    private AnchorPane background;
+    private BorderPane background;
+    @FXML
+    private Pane mediaPane, imagePane;
     @FXML
     private Label mediaTitle, appTitle;
     @FXML
     private Button mediaActionButton, mediaNextbutton, mediaPreviousButton, mediaResetButton, openFileButton;
-    @FXML
-    private ProgressBar progressBar;
     @FXML
     private Slider progressSlider;
     @FXML
@@ -61,20 +59,7 @@ public class MediaPlayer implements Initializable {
         setLayout();
 
 //        mediaActionButton.setGraphic(new FontIcon());
-        progressSlider.setMin(0);
-        progressSlider.setMax(1);
-        progressSlider.setValueChanging(true);
-        progressSlider.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> isSeeking = true);
-        progressSlider.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> isSeeking = false);
-
-        progressSlider.valueProperty().addListener((observableValue, number, newValue) -> {
-            if (isSeeking) {
-                System.out.println("Now I am seeking");
-                double newTime = newValue.doubleValue() * media.getDuration().toMillis();
-                mediaPlayer.seek(Duration.millis(newTime));
-            }
-        });
-
+        configureProgressSlider();
 
         for (String speed : speeds) {
             speedBox.getItems().add(speed);
@@ -85,9 +70,22 @@ public class MediaPlayer implements Initializable {
         volumeBar.valueProperty().addListener((observableValue, number, t1) -> mediaPlayer.setVolume(volumeBar.getValue() * 0.01));
     }
 
+    private void configureProgressSlider() {
+        progressSlider.setMin(0);
+        progressSlider.setMax(1);
+        progressSlider.setValueChanging(true);
+        progressSlider.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> isSeeking = true);
+        progressSlider.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> isSeeking = false);
+
+        progressSlider.valueProperty().addListener((observableValue, number, newValue) -> {
+            if (isSeeking) {
+                double newTime = newValue.doubleValue() * media.getDuration().toMillis();
+                mediaPlayer.seek(Duration.millis(newTime));
+            }
+        });
+    }
+
     void setLayout() {
-        progressBar.prefWidthProperty().bind(progressParent.prefWidthProperty());
-        progressBar.prefWidthProperty().bind(progressParent.widthProperty());
         progressSlider.prefWidthProperty().bind(progressParent.widthProperty());
 
         controlBar.prefWidthProperty().bind(progressParent.widthProperty());
@@ -95,8 +93,15 @@ public class MediaPlayer implements Initializable {
         appTitle.prefWidthProperty().bind(titleParent.widthProperty());
         mediaSelect.prefWidthProperty().bind(titleParent.widthProperty());
 
-        mediaView.fitHeightProperty().bind(background.minHeightProperty());
-        mediaView.fitWidthProperty().bind(background.minWidthProperty());
+        mediaPane.prefWidthProperty().bind(background.widthProperty());
+        mediaPane.prefHeightProperty().bind(background.heightProperty());
+        imagePane.prefWidthProperty().bind(background.widthProperty());
+        background.setStyle("""
+                -fx-border-color: orange;
+                -fx-border-width: 5px;
+                """);
+        mediaView.fitWidthProperty().bind(mediaPane.widthProperty());
+        mediaView.fitHeightProperty().bind(mediaPane.heightProperty());
     }
 
     @FXML
@@ -146,7 +151,7 @@ public class MediaPlayer implements Initializable {
         ExtensionFilter extensionFilter2 = new ExtensionFilter("MP3 files (*.mp3)", "*.mp3");
         fileChooser.getExtensionFilters().add(extensionFilter1);
         fileChooser.getExtensionFilters().add(extensionFilter2);
-        fileChooser.setSelectedExtensionFilter(extensionFilter2);
+        fileChooser.setSelectedExtensionFilter(extensionFilter1);
         file = fileChooser.showOpenDialog(null);
 
         setupMedia(file);
@@ -162,9 +167,7 @@ public class MediaPlayer implements Initializable {
             mediaPlayer.currentTimeProperty().addListener((observableValue, duration, newTime) -> {
                 double value = newTime.toMillis() / media.getDuration().toMillis();
                 progressSlider.setValue(value);
-                progressBar.setProgress(value);
             });
-            progressBar.setMinWidth(200);
 
             if ("mp3".equalsIgnoreCase(extension)) {
                 mediaView.setVisible(false);
@@ -179,7 +182,6 @@ public class MediaPlayer implements Initializable {
             if (isPlaying) {
                 mediaAction(null);
             }
-            progressBar.setProgress(0);
             progressSlider.setValue(0);
         }
     }

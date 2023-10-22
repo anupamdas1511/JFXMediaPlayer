@@ -3,25 +3,24 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
 <!--<?import org.kordamp.ikonli.javafx.FontIcon?>-->
 
-<AnchorPane fx:id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="557.0" prefWidth="846.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.jmediaplayer.MediaPlayer">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="557.0" prefWidth="846.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.jmediaplayer.MediaPlayer">
    <children>
-      <BorderPane layoutX="193.0" layoutY="111.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="background" layoutX="193.0" layoutY="111.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
             <VBox fx:id="progressParent" prefHeight="129.0" prefWidth="846.0" style="-fx-background-color: #36454F;" BorderPane.alignment="CENTER">
                <children>
-                  <ProgressBar fx:id="progressBar" prefHeight="20.0" prefWidth="847.0" progress="0.0" />
                   <Slider fx:id="progressSlider" />
                   <HBox fx:id="controlBar" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
@@ -60,8 +59,20 @@
          <center>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS">
                <children>
-                  <ImageView fx:id="imageView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER" prefHeight="328.0" prefWidth="850.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Pane fx:id="mediaPane" prefHeight="328.0" style="-fx-border-color: red; -fx-border-width: 2;" HBox.hgrow="ALWAYS">
+                           <children>
+                              <MediaView fx:id="mediaView" fitHeight="320.0" fitWidth="400.0" />
+                           </children>
+                        </Pane>
+                        <Pane fx:id="imagePane" prefHeight="328.0" prefWidth="432.0" style="-fx-border-color: blue; -fx-border-width: 2;">
+                           <children>
+                              <ImageView fx:id="imageView" fitHeight="200.0" fitWidth="200.0" layoutX="119.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </HBox>
                </children>
             </HBox>
          </center>
